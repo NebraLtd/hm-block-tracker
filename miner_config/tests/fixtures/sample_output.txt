@@ -8,9 +8,9 @@
     {blockchain,
     [
       {key, {ecc, [{key_slot, 0}, {onboarding_key_slot, 0}]}},
-      {blessed_snapshot_block_height, {{ blessed_block }}},
+      {blessed_snapshot_block_height, 500},
       {blessed_snapshot_block_hash,
-      {{ blessed_block_hash }}}
+      HASH HERE}
     ]},
   {miner,
     [
