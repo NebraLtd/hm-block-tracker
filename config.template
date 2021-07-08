@@ -1,0 +1,21 @@
+%% -*- erlang -*-
+[
+  "config/sys.config",
+  {lager,
+    [
+      {log_root, "/var/log/miner"}
+    ]},
+    {blockchain,
+    [
+      {key, {ecc, [{key_slot, 0}, {onboarding_key_slot, 0}]}},
+      {blessed_snapshot_block_height, 900721},
+      {blessed_snapshot_block_hash,
+      <<38,86,48,8,188,202,169,31,177,199,132,220,205,202,149,78,83,208,244,148,103,249,230,4,204,152,32,124,48,239,212,25>>}
+    ]},
+  {miner,
+    [
+      {use_ebus, true},
+      {radio_device, { {0,0,0,0}, 1680,
+        {0,0,0,0}, 31341} }
+    ]}
+].
