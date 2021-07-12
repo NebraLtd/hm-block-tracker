@@ -1,6 +1,11 @@
 name: Run Blessed Block Update
 
-on: [push] # This needs to be swapped to schedule once tested.
+on:
+  push:
+    branches:
+     - master
+  schedule:
+    - cron: "0 * * * *"
 
 jobs:
   build:
@@ -31,7 +36,7 @@ jobs:
           sleep 2m
       - name: Compare the block height of the config file and the miner container.
         run: |
-          docker exec -it miner /opt/miner/bin/miner info height | awk {'print $2'}
+          PYTHONPATH=`pwd` python3 has_block_incremented.py
       - name: Stop miner container.
         run: |
           docker kill miner
