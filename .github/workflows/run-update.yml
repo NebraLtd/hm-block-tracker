@@ -19,4 +19,32 @@ jobs:
       - name: Run config file generator.
         run: |
           PYTHONPATH=`pwd` python3 miner_config/generate_config.py
-      # Now upload the docker.config file to object storage + cdn.
+      # Here we test that the config actually works on a miner docker container...
+      - name: Launch miner container.
+        run: |
+          docker pull quay.io/team-helium/miner:latest-amd64
+          mkdir config
+          cp docker.config config/sys.config
+          docker run --volume config:/opt/miner/config -d --name miner quay.io/team-helium/miner:latest-amd64
+      - name: Wait a couple of mins for the container to come up connect and start syncing.
+        run: |
+          sleep 2m
+      - name: Compare the block height of the config file and the miner container.
+        run: |
+          docker exec -it miner /opt/miner/bin/miner info height | awk {'print $2'}
+      - name: Stop miner container.
+        run: |
+          docker kill miner
+          docker rm miner
+      - name: Setup gsutil.
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GOOGLE_SA }}
+          project_id: ${{ secrets.GOOGLE_PROJECT }}
+          export_default_credentials: true
+      - name: Copy config file to bucket.
+        run: |
+          gsutil cp docker.config gs://helium-assets.nebra.com/test.config
+      - name: Set ACL
+        run: |
+          gsutil acl set acl.txt gs://helium-assets.nebra.com/test.config
