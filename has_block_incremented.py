@@ -15,6 +15,11 @@ def main():
     config_file = read_sys_config_file(path='config/sys.config')
     config_block_height = extract_blessed_block(config_file)
 
+    print(
+        "%s (blessed block) ->->-> %s (miner block)"
+        % (config_block_height, miner_block_height)
+    )
+
     if config_block_height < miner_block_height:
         print("Miner has continued syncing after blessed block. Success!")
         sys.exit(0)
