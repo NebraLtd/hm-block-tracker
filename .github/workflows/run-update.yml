@@ -42,7 +42,7 @@ jobs:
           docker kill miner
           docker rm miner
       - name: Setup gsutil.
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        uses: google-github-actions/deploy-cloudrun@main
         with:
           service_account_key: ${{ secrets.GOOGLE_SA }}
           project_id: ${{ secrets.GOOGLE_PROJECT }}
