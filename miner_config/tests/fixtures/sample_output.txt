@@ -17,6 +17,8 @@
     ]},
   {miner,
     [
+      {jsonrpc_ip, {0,0,0,0}},
+      {jsonrpc_port, 4467},
       {use_ebus, true},
       {radio_device, { {0,0,0,0}, 1680,
         {0,0,0,0}, 31341} }
