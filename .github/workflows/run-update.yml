@@ -53,3 +53,10 @@ jobs:
       - name: Set ACL
         run: |
           gsutil acl set acl.txt gs://helium-assets.nebra.com/docker.config
+      - name: Purge Cloudflare Cache for URL
+        run: |
+          sleep 2m
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+          -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
+          -H "Content-Type: application/json" \
+          --data '{"files":["https://helium-assets.nebra.com/docker.config",{"url":"https://helium-assets.nebra.com/docker.config"}]}'
