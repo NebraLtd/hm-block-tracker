@@ -24,23 +24,6 @@ jobs:
       - name: Run config file generator.
         run: |
           PYTHONPATH=`pwd` python3 miner_config/generate_config.py
-      # Here we test that the config actually works on a miner docker container...
-      - name: Launch miner container.
-        run: |
-          docker pull quay.io/team-helium/miner:latest-amd64
-          mkdir config
-          cp docker.config config/sys.config
-          docker run --volume config:/opt/miner/config -d --name miner quay.io/team-helium/miner:latest-amd64
-      - name: Wait a couple of mins for the container to come up connect and start syncing.
-        run: |
-          sleep 2m
-      - name: Compare the block height of the config file and the miner container.
-        run: |
-          PYTHONPATH=`pwd` python3 has_block_incremented.py
-      - name: Stop miner container.
-        run: |
-          docker kill miner
-          docker rm miner
       - name: Setup gsutil.
         uses: google-github-actions/setup-gcloud@master
         with:
