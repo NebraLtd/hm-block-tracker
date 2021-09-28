@@ -1,7 +1,13 @@
-## VM Installation
+# Snapshotter
+
+This rough guide provides instructions on how to configure a GCP instance for spitting out snapshots to GCS on crontab. We
+will use this to provide private snapshots to Nebra customers for faster syncing than the upstream blessed snapshots.
+
+## Installation
+### VM Installation
 
 - Create new VM in GCP
-  + I found 2GB RAM caused heap size reached error during snapshot, so upped instance size to 8GB RAM (e2-standard-2)
+  + I found 2GB RAM caused heap size reached error during snapshot, so upped instance size to 4GB RAM (e2-medium)
   + Ubuntu 20.04 LTS used, but below instructions probably work with most recent Debian variants.
 - Update OS
   + sudo su
@@ -17,8 +23,42 @@
   + apt-get install docker-ce docker-ce-cli containerd.io
 - Create directory for the miner data
   + mkdir /var/miner_data
+- Create directory for the miner config and copy in sys.config from the repo
+  + mkdir /var/miner_config
+  + cp <repo_base_dir>/snapshotter/sys.config /var/miner_config/.
 - Run miner container
-  + docker run --volume /var/miner_data:/var/data -d -p 127.0.0.1:4467:4467 --restart=always --name miner quay.io/team-helium/miner:latest-amd64
+  + docker run --volume /var/miner_config:/opt/miner/config --volume /var/miner_data:/var/data -d -p 127.0.0.1:4467:4467 --restart=always --name miner quay.io/team-helium/miner:latest-amd64
+- Fetch the latest snapshot from upstream bucket, you can find the <block> height of the latest snapshot from the API - https://api.helium.io/v1/snapshots
+  + cd /var/miner_data/saved-snaps; wget https://snapshots.helium.wtf/mainnet/snap-<block>
+- Import the snapshot
+  + docker exec miner miner snapshot load /var/data/saved-snaps/snap-<block>
+- Initialise Google Cloud Service Account on the instance by following this guide... https://gist.github.com/ryderdamen/926518ddddd46dd4c8c2e4ef5167243d
+- Install CRON
+  + apt-get install cron
+- Copy create snapshot script to host.
+  + cp <repo_base_dir>/snapshotter/create-snapshot.sh ~/.
+- Change permissions on script to be executable
+  + chmod 744 ~/create-snapshot.sh
+- Add script to crontab on a suitable frequency, probs every 4 hours (*/4)
+  + crontab -e
 
 
-
+### Google Cloud Storage Bucket
+- Create a new GCS bucket to store your snapshots.
+  + Name: helium-snapshots
+  + Location type: Multi-region
+  + Storage Class: Standard
+  + Enforce public access prevention on this bucket: Unchecked
+  + Access control: Uniform
+  + Protection tools: None
+- Switch to the lifecycle tab and add a rule.
+  + Action: Delete object
+  + Condition: Age - 1 day
+- Visit the Virtual Machine's page and copy it's service account it should look something like 726878424436-compute@developer.gserviceaccount.com
+- Within the bucket switch to the permissions tab and add a new permission
+  + New principals: Your service account, e.g. 726878424436-compute@developer.gserviceaccount.com
+  + Role: Storage Legacy Object Owner
+- Make objects public, click add a new permission
+  + New principals: allUsers
+  + Role: Storage Legacy Object Reader
+  
