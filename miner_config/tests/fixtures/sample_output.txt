@@ -42,12 +42,12 @@
   ]},
  {blockchain,
   [
-   {s3_base_url, "https://snapshots.helium.wtf/mainnet"},
+   {s3_base_url, "https://helium-assets.nebra.com/snapshots"},
    {honor_quick_sync, true},
    {quick_sync_mode, blessed_snapshot},
-   {blessed_snapshot_block_height, 500},
+   {blessed_snapshot_block_height, 1033294},
    {blessed_snapshot_block_hash,
-     HASH HERE},
+     <<173,58,240,216,75,238,38,148,126,144,226,123,53,46,158,127,159,45,21,253,131,36,225,83,114,145,188,201,186,45,45,204>>},
    {listen_addresses, ["/ip4/0.0.0.0/tcp/44158"]},
    {key, {ecc, [{key_slot, 0}, {onboarding_key_slot, 0}]}}, %% don't make this the last line in the stanza because sed and keep it on one line
    {base_dir, "/var/data"},
