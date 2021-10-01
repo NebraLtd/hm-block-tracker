@@ -43,3 +43,8 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
           -H "Content-Type: application/json" \
           --data '{"files":["https://helium-assets.nebra.com/docker.config",{"url":"https://helium-assets.nebra.com/docker.config"}]}'
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+          -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
+          -H "Content-Type: application/json" \
+          --data '{"files":["https://helium-snapshots.nebra.com/latest.json",{"url":"https://helium-snapshots.nebra.com/latest.json"}]}'
+
