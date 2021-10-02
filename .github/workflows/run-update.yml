@@ -5,7 +5,7 @@ on:
     branches:
      - master
   schedule:
-    - cron: "0 * * * *"
+    - cron: "10 * * * *"
 
 jobs:
   build:
@@ -36,6 +36,10 @@ jobs:
       - name: Set ACL
         run: |
           gsutil acl set acl.txt gs://helium-assets.nebra.com/docker.config
+      - name: Change Cache-Control metadata of assets
+        run: |
+          gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-assets.nebra.com/docker.config
+          gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-snapshots.nebra.com/latest.json
       - name: Purge Cloudflare Cache for URL
         run: |
           sleep 2m
