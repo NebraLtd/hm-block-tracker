@@ -4,7 +4,7 @@ This repository contains the tools required for achieving very quick syncing of 
 
 This is facilitated using the following steps:
 - use our snapshotter tool ([more info in the README](./snapshotter/README.md)) on GCP to generate miner snapshots every 4 hours (approx 240 blocks) along with a [JSON file](https://helium-snapshots.nebra.com/latest.json) containing information on the snapshot height and snapshot hash for the latest generated snapshot
-- periodically (hourly) generate config files for the Helium miner with a blessed block following that of the latest snapshot mentioned above
+- periodically (hourly) generate the [config file](https://helium-assets.nebra.com/docker.config) for the Helium miner with a blessed block following that of the latest snapshot mentioned above
 
 These files (config and snapshot) are stored on GCP and cached by Cloudflare for quick and reliable retrieval by hotspots worldwide.
 
