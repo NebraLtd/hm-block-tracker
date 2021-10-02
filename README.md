@@ -18,7 +18,7 @@ For other manufacturers / DIY owners that wish to introduce an "instant sync" fe
 
 - sys.config file - https://helium-assets.nebra.com/docker.config (you may need to customise some parts of this for your device)
 - latest snapshot info - https://helium-snapshots.nebra.com/latest.json
-- snapshot itself - https://helium-snapshots.nebra.com/snap-1035148 (you can pull the snap- parameter from the latest.json above)
+- snapshot itself - https://helium-snapshots.nebra.com/snap-1035148 (you can pull the snap-<height> parameter from the latest.json above)
 - helium-miner-software (full nebra stack) - https://github.com/NebraLtd/helium-miner-software
 
 ## References
