@@ -22,6 +22,12 @@ jobs:
       - name: Run config file generator.
         run: |
           PYTHONPATH=`pwd` python3 miner_config/generate_config.py
+          # Output latest version info
+          HEIGHT=$(curl -s -H 'Cache-Control: no-cache' https://storage.googleapis.com/helium-snapshots.nebra.com/latest.json | jq -r '.height')
+          HASH=$(curl -s -H 'Cache-Control: no-cache' https://storage.googleapis.com/helium-snapshots.nebra.com/latest.json | jq -r '.hash')
+          echo "Block height: $HEIGHT"
+          echo "Block hash: $HASH"
+          exit 0
       - name: Setup gsutil.
         uses: google-github-actions/setup-gcloud@master
         with:
