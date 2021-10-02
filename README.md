@@ -1,6 +1,6 @@
 # Helium Block Tracker
 
-This repository contains the tools required for achieving very quick syncing of Helium Miners (typically called instant sync by many vendors).
+This repository contains the tools required for achieving very quick syncing of Helium Miners (typically called "instant sync" by many vendors).
 
 This is facilitated using the following steps:
 - use our snapshotter tool ([more info in the README](./snapshotter/README.md)) on GCP to generate miner snapshots every 4 hours (approx 240 blocks) along with a [JSON file](https://helium-snapshots.nebra.com/latest.json) containing information on the snapshot height and snapshot hash for the latest generated snapshot
