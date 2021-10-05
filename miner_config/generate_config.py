@@ -5,8 +5,13 @@ from jinja2 import Template
 def get_latest_snapshot_block():
     # Fetches latest snapshoted block from Helium API.
     # resp = requests.get('https://helium-snapshots.nebra.com/latest.json')
+    cache = {
+            "Cache-Control": "no-cache",
+            "Pragma": "no-cache"
+    }
     resp = requests.get(
-        'https://storage.googleapis.com/helium-snapshots.nebra.com/latest.json'
+      'https://storage.googleapis.com/helium-snapshots.nebra.com/latest.json',
+      headers=cache
     )
     if resp.status_code == 200:
         return resp.json()
