@@ -21,6 +21,10 @@ For other manufacturers / DIY owners that wish to introduce an "instant sync" fe
 - snapshot itself - https://helium-snapshots.nebra.com/snap-1035148 (you can pull the snap-\<height\> parameter from the latest.json above)
 - helium-miner-software (full nebra stack) - https://github.com/NebraLtd/helium-miner-software
 
+## Notes
+
+When updating the config.template and txt files in tests/fixtures make sure to remove any new line characters from the end of the file, or the python unit tests will fail.
+
 ## References
 
 This repository deprecates the following repositories:
