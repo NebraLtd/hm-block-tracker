@@ -3,8 +3,8 @@
 This repository contains the tools required for achieving very quick syncing of Helium Miners (typically called "instant sync" by many vendors).
 
 This is facilitated using the following steps:
-- use our snapshotter tool ([more info in the README](./snapshotter/README.md)) on GCP to generate miner snapshots every 4 hours (approx 240 blocks) along with a [JSON file](https://helium-snapshots.nebra.com/latest.json) containing information on the snapshot height and snapshot hash for the latest generated snapshot
-- periodically (hourly) generate the [config file](https://helium-assets.nebra.com/docker.config) for the Helium miner with a blessed block following that of the latest snapshot mentioned above
+* use our snapshotter tool ([more info in the README](./snapshotter/README.md)) on GCP to generate miner snapshots every 4 hours (approx 240 blocks) along with a [JSON file](https://helium-snapshots.nebra.com/latest.json) containing information on the snapshot height and snapshot hash for the latest generated snapshot
+* periodically (hourly) generate the [config file](https://helium-assets.nebra.com/docker.config) for the Helium miner with a blessed block following that of the latest snapshot mentioned above
 
 These files (config and snapshot) are stored on GCP and cached by Cloudflare for quick and reliable retrieval by hotspots worldwide.
 
@@ -16,10 +16,10 @@ In the future we plan to introduce a [watchdog container](https://github.com/Neb
 
 For other manufacturers / DIY owners that wish to introduce an "instant sync" feature - you are more than welcome to use our snapshots for this purpose free of charge. We will publish some documentation on this shortly, but basically we have:
 
-- sys.config file - https://helium-assets.nebra.com/docker.config (you may need to customise some parts of this for your device)
-- latest snapshot info - https://helium-snapshots.nebra.com/latest.json
-- snapshot itself - https://helium-snapshots.nebra.com/snap-1035148 (you can pull the snap-\<height\> parameter from the latest.json above)
-- helium-miner-software (full nebra stack) - https://github.com/NebraLtd/helium-miner-software
+* sys.config file - https://helium-assets.nebra.com/docker.config (you may need to customise some parts of this for your device)
+* latest snapshot info - https://helium-snapshots.nebra.com/latest.json
+* snapshot itself - https://helium-snapshots.nebra.com/snap-1035148 (you can pull the snap-\<height\> parameter from the latest.json above)
+* helium-miner-software (full nebra stack) - https://github.com/NebraLtd/helium-miner-software
 
 ## Notes
 
@@ -28,5 +28,5 @@ When updating the config.template and txt files in tests/fixtures make sure to r
 ## References
 
 This repository deprecates the following repositories:
-- https://github.com/NebraLtd/snapshot-bumper
-- https://github.com/NebraLtd/vps-scripts
+* https://github.com/NebraLtd/snapshot-bumper
+* https://github.com/NebraLtd/vps-scripts
