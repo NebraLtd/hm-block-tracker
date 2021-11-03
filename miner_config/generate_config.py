@@ -12,7 +12,7 @@ def get_latest_snapshot_block(base_url):
     }
     resp = requests.get(
         'https://storage.googleapis.com/{}/latest.json'.format(
-            base_url.strip('https://')
+            base_url.replace('https://', '')
         ),
         headers=cache
     )
