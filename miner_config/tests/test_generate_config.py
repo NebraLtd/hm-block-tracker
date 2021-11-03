@@ -35,5 +35,6 @@ class TestPopulateTemplate(TestCase):
             'height': 500,
             'hash': 'HASH HERE'
         }
-        output = populate_template(blessed_block)
+        base_url = 'https://helium-snapshots.nebra.com'
+        output = populate_template(blessed_block, base_url)
         self.assertEqual(output, conf_file)
