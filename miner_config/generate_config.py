@@ -1,14 +1,25 @@
-import json
 import os
+import requests
 from jinja2 import Template
 
 
-def get_latest_snapshot_block():
-    """
-    We are already building this file as part of the workflow
-    """
-    with open('/var/miner_data/saved-snaps/latest.json') as f:
-        return json.loads(f.read())
+def get_latest_snapshot_block(base_url):
+    # Fetches latest snapshoted block from Helium API.
+    # resp = requests.get('https://helium-snapshots.nebra.com/latest.json')
+    cache = {
+            "Cache-Control": "no-cache",
+            "Pragma": "no-cache"
+    }
+    resp = requests.get(
+      'https://storage.googleapis.com/{}/latest.json'.format(
+          base_url.strip('https://')
+          ),
+      headers=cache
+    )
+    if resp.status_code == 200:
+        return resp.json()
+    else:
+        raise Exception("Error fetching snapshot block from Helium API")
 
 
 def populate_template(blessed_block, base_url, template_file='config.template'):
@@ -29,13 +40,13 @@ def output_config_file(config, path='docker.config'):
 
 
 def main():
-    latest_snapshot = get_latest_snapshot_block()
 
     if bool(int(os.getenv('PRODUCTION', '0'))):
         base_url = 'https://helium-snapshots.nebra.com'
     else:
         base_url = 'https://helium-snapshots-stage.nebra.com'
 
+    latest_snapshot = get_latest_snapshot_block(base_url)
     config = populate_template(latest_snapshot, base_url)
     output_config_file(config)
 

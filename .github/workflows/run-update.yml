@@ -21,7 +21,7 @@ jobs:
           sudo pip3 install -r requirements.txt
       - name: Run config file generator.
         run: |
-          PYTHONPATH=`pwd` python3 miner_config/generate_config.py
+          PYTHONPATH=`pwd` PRODUCTION=1 python3 miner_config/generate_config.py
           # Output latest version info
           HEIGHT=$(curl -s -H 'Cache-Control: no-cache' https://storage.googleapis.com/helium-snapshots.nebra.com/latest.json | jq -r '.height')
           HASH=$(curl -s -H 'Cache-Control: no-cache' https://storage.googleapis.com/helium-snapshots.nebra.com/latest.json | jq -r '.hash')

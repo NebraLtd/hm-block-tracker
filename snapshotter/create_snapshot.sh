@@ -4,10 +4,8 @@ export PATH=$PATH:/usr/bin:/snap/bin
 
 if [ "$PRODUCTION" == "1" ]; then
     SNAPSHOT_BUCKET='helium-snapshots.nebra.com'
-    ASSET_BUCKET='helium-assets.nebra.com'
 else
     SNAPSHOT_BUCKET='helium-snapshots-stage.nebra.com'
-    ASSET_BUCKET='helium-assets-stage.nebra.com'
 fi
 
 docker exec miner miner snapshot take /var/data/saved-snaps/latest
@@ -21,12 +19,9 @@ mv /var/miner_data/saved-snaps/latest /var/miner_data/saved-snaps/snap-$BLOCK_HE
 echo "{\"height\": $BLOCK_HEIGHT, \"hash\": \"$BYTE_ARRAY\"}" > /var/miner_data/saved-snaps/latest.json
 echo "{\"height\": $BLOCK_HEIGHT, \"hash\": \"$BASE64URL_FORMAT\"}" > /var/miner_data/saved-snaps/latest-snap.json
 
-PRODUCTION="$PRODUCTION" python3 generate_config.py
-
 gsutil cp /var/miner_data/saved-snaps/snap-$BLOCK_HEIGHT "gs://$SNAPSHOT_BUCKET/snap-$BLOCK_HEIGHT"
 gsutil cp /var/miner_data/saved-snaps/latest.json "gs://$SNAPSHOT_BUCKET/latest.json"
 gsutil cp /var/miner_data/saved-snaps/latest-snap.json "gs://$SNAPSHOT_BUCKET/latest-snap.json"
-gsutil cp docker.config "gs://$ASSET_BUCKET/docker.config"
 
 rm docker.config
 rm /var/miner_data/saved-snaps/snap-$BLOCK_HEIGHT
