@@ -3,7 +3,7 @@ name: Run Blessed Block Update
 on:
   push:
     branches:
-     - master
+     - production
   schedule:
     - cron: "10 * * * *"
   workflow_dispatch:
@@ -55,4 +55,8 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
           -H "Content-Type: application/json" \
           --data '{"files":["https://helium-snapshots.nebra.com/latest.json",{"url":"https://helium-snapshots.nebra.com/latest.json"}]}'
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+          -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
+          -H "Content-Type: application/json" \
+          --data '{"files":["https://helium-snapshots.nebra.com/latest-snap.json",{"url":"https://helium-snapshots.nebra.com/latest-snap.json"}]}'
 
