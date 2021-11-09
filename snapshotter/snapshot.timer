@@ -1,0 +1,10 @@
+[Unit]
+Description=Runs Helium Blockchain Snapshot Every Hour
+Requires=snapshot.service
+
+[Timer]
+Unit=snapshot.service
+OnCalendar=*-*-* *:00:00
+
+[Install]
+WantedBy=timers.target
