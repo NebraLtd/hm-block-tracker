@@ -1,4 +1,4 @@
-name: Run Blessed Block Update
+name: Run Blessed Block Update (Production)
 
 on:
   push:
@@ -14,6 +14,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: production
       - name: Install Python & dependencies.
         run: |
           sudo apt-get update
@@ -44,6 +46,7 @@ jobs:
         run: |
           gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-assets.nebra.com/docker.config
           gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-snapshots.nebra.com/latest.json
+          gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-snapshots.nebra.com/latest-snap.json
       - name: Purge Cloudflare Cache for URL
         run: |
           sleep 2m

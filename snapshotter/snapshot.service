@@ -1,0 +1,14 @@
+[Unit]
+Description=Creates Helium block chain snapshot and uploads to GCS
+Wants=snapshot.timer
+
+[Service]
+Environment="PRODUCTION=1"
+Environment="PYTHONPATH=/home/snapshot/hm-block-tracker/snapshotter/"
+Type=oneshot
+User=snapshot
+Group=snapshot
+ExecStart=/home/snapshot/hm-block-tracker/snapshotter/create_snapshot.sh
+
+[Install]
+WantedBy=multi-user.target

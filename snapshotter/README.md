@@ -23,6 +23,7 @@ will use this to provide private snapshots to Nebra customers for faster syncing
   * `apt-get install docker-ce docker-ce-cli containerd.io`
 * Create directory for the miner data
   * `mkdir /var/miner_data`
+  * `chmod 755 /var/miner_data`
 * Create directory for the miner config and copy in sys.config from the repo
   * `mkdir /var/miner_config`
   * `cp <repo_base_dir>/snapshotter/sys.config /var/miner_config/.`
@@ -33,15 +34,21 @@ will use this to provide private snapshots to Nebra customers for faster syncing
 * Import the snapshot
   * `docker exec miner miner snapshot load /var/data/saved-snaps/snap-<block>`
 * Initialise Google Cloud Service Account on the instance by following this guide... https://gist.github.com/ryderdamen/926518ddddd46dd4c8c2e4ef5167243d
-* Install CRON
-  * `apt-get install cron`
-* Copy create snapshot script to host.
-  * `cp <repo_base_dir>/snapshotter/create-snapshot.sh ~/.`
-* Change permissions on script to be executable
-  * `chmod 744 ~/create-snapshot.sh`
-* Add script to crontab on a suitable frequency, probs every 4 hours (*/4)
-  * `crontab -e`
-  * Make sure to pass on `PRODUCTION=1` to run the production job
+* Create a user to perform snapshotting and add it to the Docker group.
+  * `useradd --shell /bin/bash snapshot`
+  * `usermod -G docker snapshot`
+* Assume the user and checkout the Github repository into their home directory.
+  * `su - snapshot`
+  * `git clone https://github.com/NebraLtd/hm-block-tracker.git`
+* Create appropriate SystemD configurations in /etc/systemd/system based on the sample files in the repository
+  * `vi /etc/systemd/system/snapshot.service`
+  * `vi /etc/systemd/system/snapshot.timer`
+* Test functionality
+  * `systemctl start snapshot.service`
+  * Should complete cleanly synchronously in the user's shell
+* Once happy enable the timer
+  * `systemctl enable snapshot.timer`
+  
 
 ### Google Cloud Storage Bucket
 * Create a new GCS bucket to store your snapshots.

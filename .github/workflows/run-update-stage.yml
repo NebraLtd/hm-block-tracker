@@ -1,4 +1,4 @@
-name: Run Blessed Block Update
+name: Run Blessed Block Update (Staging)
 
 on:
   push:
