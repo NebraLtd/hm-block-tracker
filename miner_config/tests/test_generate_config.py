@@ -36,5 +36,6 @@ class TestPopulateTemplate(TestCase):
             'hash': 'HASH HERE'
         }
         base_url = 'https://helium-snapshots.nebra.com'
-        output = populate_template(blessed_block, base_url)
+        i2c_bus = 'i2c-1'
+        output = populate_template(blessed_block, base_url, i2c_bus)
         self.assertEqual(output, conf_file)
