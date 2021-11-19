@@ -51,7 +51,7 @@ def main():
     else:
         base_url = 'https://helium-snapshots-stage.nebra.com'
 
-    if bool(int(os.getenv('ROCKPI', '1'))):
+    if bool(int(os.getenv('ROCKPI', '0'))):
         i2c_bus = 'i2c-7'
         path = 'docker.config.rockpi'
     else:
