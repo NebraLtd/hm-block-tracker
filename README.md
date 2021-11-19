@@ -19,6 +19,14 @@ In the future we plan to introduce a [watchdog container](https://github.com/Neb
 
 The template is then automatically built and copied in based on this.
 
+## Variants of config file
+
+We currently build two different configs:
+- Raspberry Pi config, named docker.config and uses i2c-1 bus
+- RockPi config, named docker.config.rockpi and uses i2c-7 bus
+
+This is done by passing a ROCKPI=1 env variable to the python command in the GitHub Actions workflow when building the RockPi config.
+
 ## Other Vendors / DIY
 
 For other manufacturers / DIY owners that wish to introduce an "instant sync" feature - you are more than welcome to use our snapshots for this purpose free of charge. We will publish some documentation on this shortly, but basically we have:
@@ -30,7 +38,7 @@ For other manufacturers / DIY owners that wish to introduce an "instant sync" fe
 
 ## Notes
 
-When updating the config.template and txt files in tests/fixtures make sure to remove any new line characters from the end of the file, or the python unit tests will fail.
+When updating the config.template and txt files in tests/fixtures make sure to remove any new line characters from the end of the file, or the python unit tests will fail. You can do this using something like `truncate -s -1 miner_config/tests/fixtures/sample_output.txt`. If on macOS you may need to first `brew install truncate`.
 
 ## References
 
