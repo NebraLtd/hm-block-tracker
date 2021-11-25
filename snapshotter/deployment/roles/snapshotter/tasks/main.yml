@@ -1,0 +1,9 @@
+---
+  - name: Configure users for snapshotter
+    import_tasks: add_user.yml
+  - name: Configure Python for snapshotter
+    import_tasks: configure_python.yml
+  - name: Configure Snapshotter
+    import_tasks: configure_snapshotter.yml
+  - name: Configure SystemD
+    import_tasks: configure_systemd.yml

@@ -1,0 +1,53 @@
+---
+- name: Create miner_data directory
+  file:
+    path: /var/miner_data
+    state: directory
+
+- name: Create miner_config directory
+  file:
+    path: /var/miner_config
+    state: directory
+
+- name: Clone hm-blocktracker repository
+  git:
+    repo: https://github.com/NebraLtd/hm-block-tracker.git
+    dest: /tmp/hm-block-tracker
+    clone: yes
+    update: yes
+
+- name: Copy hm-block-tracker to snapshot user's home
+  copy:
+    src: /tmp/hm-block-tracker
+    dest: /home/snapshot
+    remote_src: yes
+    owner: snapshot
+    group: snapshot
+    mode: '0755'
+
+- name: Make create_snapshot.sh executable
+  file:
+    dest: /home/snapshot/hm-block-tracker/snapshotter/create_snapshot.sh
+    mode: a+x
+
+- name: Copy Miner Config
+  copy:
+    src: /home/snapshot/hm-block-tracker/snapshotter/sys.config
+    dest: /var/miner_config/sys.config
+    remote_src: yes
+
+- name: Pull Helium Miner Docker Image
+  docker_image:
+    name: "quay.io/team-helium/miner:latest-amd64"
+    source: pull
+
+- name: Ensure Helium Miner Container
+  docker_container:
+    name: "miner"
+    image: "quay.io/team-helium/miner:latest-amd64"
+    state: started
+    detach: yes
+    restart_policy: always
+    volumes:
+      - /var/miner_data:/var/data
+      - /var/miner_config:/opt/miner/config
