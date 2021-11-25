@@ -1,0 +1,10 @@
+---
+- name: Create snapshot user
+  user:
+    name: 'snapshot'
+    state: present
+    groups:
+      - docker
+    shell: /bin/bash
+    system: no
+    createhome: yes

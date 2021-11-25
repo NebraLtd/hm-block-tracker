@@ -19,7 +19,7 @@ def get_latest_snapshot_block(base_url):
     if resp.status_code == 200:
         return resp.json()
     else:
-        raise Exception("Error fetching snapshot block from Helium API")
+        raise Exception("Error fetching snapshotter block from Helium API")
 
 
 def populate_template(
