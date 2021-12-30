@@ -5,9 +5,9 @@ import sentry_sdk
 
 
 def init_sentry():
-    dsn_sentry = os.environ.get("DSN_SENTRY")
+    sentry_block_tracker = os.environ.get("SENTRY_BLOCK_TRACKER")
     sentry_sdk.init(
-        dsn_sentry,
+        sentry_block_tracker,
         traces_sample_rate=1.0,
     )
 
