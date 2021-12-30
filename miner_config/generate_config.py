@@ -1,6 +1,15 @@
 import os
 import requests
 from jinja2 import Template
+import sentry_sdk
+
+
+def init_sentry():
+    sentry_block_tracker = os.environ.get("SENTRY_BLOCK_TRACKER")
+    sentry_sdk.init(
+        sentry_block_tracker,
+        traces_sample_rate=1.0,
+    )
 
 
 def get_latest_snapshot_block(base_url):
@@ -46,6 +55,7 @@ def output_config_file(config, path):
 
 
 def main():
+    init_sentry()
     if bool(int(os.getenv('PRODUCTION', '0'))):
         base_url = 'https://helium-snapshots.nebra.com'
     else:
