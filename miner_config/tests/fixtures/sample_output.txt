@@ -63,7 +63,8 @@
    {relay_limit, 50},
    {disable_gateway_cache, true},
    {gw_cache_retention_limit, 0},
-   {gw_context_cache_max_size, 0}
+   {gw_context_cache_max_size, 0},
+   {blocks_to_protect_from_gc, 4000}
   ]},
  {relcast,
   [
