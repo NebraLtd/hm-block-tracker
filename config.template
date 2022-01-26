@@ -27,6 +27,7 @@
   [
    {use_dns_for_seeds, true},
    {seed_dns_cname, "seed.helium.io"},
+   {seed_config_dns_name, "_seed_config.helium.io"},
    {similarity_time_diff_mins, 30},
    {random_peer_pred, fun miner_util:random_val_predicate/1},
    {ip_confirmation_host, "https://ifconfig.co"},
@@ -54,7 +55,7 @@
    {base_dir, "/var/data"},
    {onboarding_dir, "/mnt/uboot"},
    {num_consensus_members, 16},
-   {seed_nodes, "/ip4/18.217.27.26/tcp/2154,/ip4/35.161.222.43/tcp/443,/ip4/99.80.158.114/tcp/2154"},
+   {seed_nodes, "/ip4/18.217.27.26/tcp/2154,/ip4/35.161.222.43/tcp/443,/ip4/99.80.158.114/tcp/2154,/ip4/3.66.43.167/tcp/443,/ip4/52.220.121.45/tcp/2154,/ip4/54.207.252.240/tcp/443,/ip4/3.34.10.207/tcp/2154,/ip4/13.238.174.45/tcp/443"},
    {peerbook_update_interval, 900000},
    {max_inbound_connections, 6},
    {outbound_gossip_connections, 2},
@@ -89,6 +90,8 @@
      {db_write_buffer_size, 8388608}, % 8MB
      {max_write_buffer_number, 10},
      {keep_log_file_num, 5}
+     {max_log_file_size, 1048576}, %% keep log files 1mb or less
+     {log_file_time_to_roll, 86400} %% rotate logs once a day
     ]}
   ]},
  {miner,
@@ -102,10 +105,11 @@
    {block_time, 60000},
    {late_block_timeout_seconds, 3600},
    {update_dir, "/opt/miner/update"},
+   {api_base_url, "https://api.helium.io/v1"},
    {election_interval, 30},
    {radio_device, { {0,0,0,0}, 1680,
         {0,0,0,0}, 31341} },
-   {default_routers, ["/p2p/11w77YQLhgUt8HUJrMtntGGr97RyXmot1ofs5Ct2ELTmbFoYsQa"]},
+   {default_routers, ["/p2p/11w77YQLhgUt8HUJrMtntGGr97RyXmot1ofs5Ct2ELTmbFoYsQa","/p2p/11afuQSrmk52mgxLu91AdtDXbJ9wmqWBUxC3hvjejoXkxEZfPvY"]},
    {mark_mods, [miner_hbbft_handler]},
    {stabilization_period, 50000},
    {reg_domains_file, "countries_reg_domains.csv"},
