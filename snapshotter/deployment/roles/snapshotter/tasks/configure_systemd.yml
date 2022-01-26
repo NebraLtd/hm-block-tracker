@@ -1,0 +1,50 @@
+---
+- name: Copy Snapshot Service File
+  copy:
+    src: /home/snapshot/hm-block-tracker/snapshotter/snapshot.service
+    dest: /etc/systemd/system/snapshot.service
+    remote_src: yes
+
+- name: Copy Staging Snapshot Service File
+  copy:
+    src: /home/snapshot/hm-block-tracker/snapshotter/snapshot-stage.service
+    dest: /etc/systemd/system/snapshot-stage.service
+    remote_src: yes
+
+- name: Copy Timer File
+  copy:
+    src: /home/snapshot/hm-block-tracker/snapshotter/snapshot.timer
+    dest: /etc/systemd/system/snapshot.timer
+    remote_src: yes
+
+- name: Copy Staging Timer File
+  copy:
+    src: /home/snapshot/hm-block-tracker/snapshotter/snapshot-stage.timer
+    dest: /etc/systemd/system/snapshot-stage.timer
+    remote_src: yes
+
+- name: Reload and Enable Snapshot Service
+  systemd:
+    name: snapshot
+    state: stopped
+    enabled: yes
+    daemon-reload: yes
+
+- name: Reload and Enable Staging Snapshot Service
+  systemd:
+    name: snapshot-stage
+    state: stopped
+    enabled: yes
+    daemon-reload: yes
+
+- name: Enable Snapshot Timer
+  systemd:
+    name: snapshot.timer
+    state: started
+    enabled: yes
+
+- name: Enable Staging Snapshot Timer
+  systemd:
+    name: snapshot-stage.timer
+    state: started
+    enabled: yes

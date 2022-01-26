@@ -1,0 +1,9 @@
+---
+  - name: Configure Snapshotter
+    hosts: all 
+    become: yes
+    become_user: root
+    roles:
+      - common
+      - docker
+      - snapshotter

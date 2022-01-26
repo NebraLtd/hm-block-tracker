@@ -1,0 +1,4 @@
+---
+  - name: Configure Common Elements
+    import_tasks: update_packages.yml
+
