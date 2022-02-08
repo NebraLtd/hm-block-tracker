@@ -21,17 +21,22 @@ mv /var/miner_data/saved-snaps/latest "/var/miner_data/saved-snaps/snap-$BLOCK_H
 echo "{\"height\": $BLOCK_HEIGHT, \"hash\": \"$BYTE_ARRAY\"}" > /var/miner_data/saved-snaps/latest.json
 echo "{\"height\": $BLOCK_HEIGHT, \"hash\": \"$BASE64URL_FORMAT\"}" > /var/miner_data/saved-snaps/latest-snap.json
 
-# Let's sanitize the output and make sure neither 'height' nor 'hash' is empty.
+# Ensure neither snaphot 'height' nor 'hash' are empty.
+are_snapshots_valid=1
 for file in /var/miner_data/saved-snaps/{latest.json,latest-snap.json}; do
     sanity_check=$(jq '.[] | select(. == null or . == "")' < "$file")
     if [ -n "$sanity_check" ]; then
-        echo "'hash' or 'height' returned empty in $file. Skipping."
-    else
-        gsutil cp "/var/miner_data/saved-snaps/snap-$BLOCK_HEIGHT" "gs://$SNAPSHOT_BUCKET/snap-$BLOCK_HEIGHT"
-        gsutil cp /var/miner_data/saved-snaps/latest.json "gs://$SNAPSHOT_BUCKET/latest.json"
-        gsutil cp /var/miner_data/saved-snaps/latest-snap.json "gs://$SNAPSHOT_BUCKET/latest-snap.json"
+        echo "'hash' or 'height' returned empty in $file. Will not upload snapshots."
+        are_snapshots_valid=0
     fi
 done
+
+# Only upload snapshots if they are all valid.
+if [ "$are_snapshots_valid" -eq "1" ]
+    gsutil cp "/var/miner_data/saved-snaps/snap-$BLOCK_HEIGHT" "gs://$SNAPSHOT_BUCKET/snap-$BLOCK_HEIGHT"
+    gsutil cp /var/miner_data/saved-snaps/latest.json "gs://$SNAPSHOT_BUCKET/latest.json"
+    gsutil cp /var/miner_data/saved-snaps/latest-snap.json "gs://$SNAPSHOT_BUCKET/latest-snap.json"
+fi
 
 rm docker.config
 rm -f "/var/miner_data/saved-snaps/snap-$BLOCK_HEIGHT"
