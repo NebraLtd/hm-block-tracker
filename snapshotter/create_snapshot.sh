@@ -1,4 +1,6 @@
 #!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
 
 export PATH=$PATH:/usr/bin:/snap/bin
 
@@ -15,13 +17,21 @@ BLOCK_HASH_PART2=$(docker exec miner miner snapshot info /var/data/saved-snaps/l
 BYTE_ARRAY="${BLOCK_HASH_PART1}${BLOCK_HASH_PART2}"
 BASE64URL_FORMAT=$(python3 /home/snapshot/hm-block-tracker/snapshotter/base64url_encoder.py "$BYTE_ARRAY")
 
-mv /var/miner_data/saved-snaps/latest /var/miner_data/saved-snaps/snap-$BLOCK_HEIGHT
+mv /var/miner_data/saved-snaps/latest "/var/miner_data/saved-snaps/snap-$BLOCK_HEIGHT"
 echo "{\"height\": $BLOCK_HEIGHT, \"hash\": \"$BYTE_ARRAY\"}" > /var/miner_data/saved-snaps/latest.json
 echo "{\"height\": $BLOCK_HEIGHT, \"hash\": \"$BASE64URL_FORMAT\"}" > /var/miner_data/saved-snaps/latest-snap.json
 
-gsutil cp /var/miner_data/saved-snaps/snap-$BLOCK_HEIGHT "gs://$SNAPSHOT_BUCKET/snap-$BLOCK_HEIGHT"
-gsutil cp /var/miner_data/saved-snaps/latest.json "gs://$SNAPSHOT_BUCKET/latest.json"
-gsutil cp /var/miner_data/saved-snaps/latest-snap.json "gs://$SNAPSHOT_BUCKET/latest-snap.json"
+# Let's sanitize the output and make sure neither 'height' nor 'hash' is empty.
+for file in /var/miner_data/saved-snaps/{latest.json,latest-snap.json}; do
+    sanity_check=$(jq '.[] | select(. == null or . == "")' < "$file")
+    if [ -n "$sanity_check" ]; then
+        echo "'hash' or 'height' returned empty in $file. Skipping."
+    else
+        gsutil cp "/var/miner_data/saved-snaps/snap-$BLOCK_HEIGHT" "gs://$SNAPSHOT_BUCKET/snap-$BLOCK_HEIGHT"
+        gsutil cp /var/miner_data/saved-snaps/latest.json "gs://$SNAPSHOT_BUCKET/latest.json"
+        gsutil cp /var/miner_data/saved-snaps/latest-snap.json "gs://$SNAPSHOT_BUCKET/latest-snap.json"
+    fi
+done
 
 rm docker.config
-rm -f /var/miner_data/saved-snaps/snap-$BLOCK_HEIGHT
+rm -f "/var/miner_data/saved-snaps/snap-$BLOCK_HEIGHT"
