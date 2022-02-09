@@ -28,7 +28,6 @@ $ docker run \
     -v $(pwd):/foobar \
     erlang:24-alpine \
     erl -config /foobar/docker
-
 ```
 
 If the config file is valid, you'll get something like this:
