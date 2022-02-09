@@ -1,5 +1,5 @@
-- name: Update OS Packages
+- name: Install dependency
   apt:
-    name: '*'
+    name: 'jq'
     state: latest
     update_cache: yes
