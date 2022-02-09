@@ -11,7 +11,7 @@
 
 - name: Create miner logs directory
   file:
-    path: /var/log/miner
+    path: /var/miner_logs
     state: directory
 
 - name: Clone hm-blocktracker repository
@@ -41,11 +41,13 @@
     dest: /var/miner_config/sys.config
     remote_src: yes
 
+# 'latest-amd64' needs to be pinned to a GA and moved to a variable.
 - name: Pull Helium Miner Docker Image
   docker_image:
     name: "quay.io/team-helium/miner:latest-amd64"
     source: pull
 
+# This should reuse the latest GA variable for tag.
 - name: Ensure Helium Miner Container
   docker_container:
     name: "miner"
@@ -56,3 +58,4 @@
     volumes:
       - /var/miner_data:/var/data
       - /var/miner_config:/opt/miner/config
+      - /var/miner_logs:/var/log/miner
