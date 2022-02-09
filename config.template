@@ -97,6 +97,9 @@
   ]},
  {miner,
   [
+   {denylist_keys, ["1SbEYKju337P6aYsRd9DT2k4qgK5ZK62kXbSvnJgqeaxK3hqQrYURZjL"]},
+   {denylist_type, github_release},
+   {denylist_url, "https://api.github.com/repos/helium/denylist/releases/latest"},
    {jsonrpc_ip, {0,0,0,0}}, %% bind JSONRPC to localhost only
    {jsonrpc_port, 4467},
    {mode, gateway},
@@ -105,12 +108,13 @@
    {curve, 'SS512'},
    {block_time, 60000},
    {late_block_timeout_seconds, 3600},
+   {hotfix_dir, "/opt/miner/hotfix"},
    {update_dir, "/opt/miner/update"},
    {api_base_url, "https://api.helium.io/v1"},
    {election_interval, 30},
    {radio_device, { {0,0,0,0}, 1680,
         {0,0,0,0}, 31341} },
-   {default_routers, ["/p2p/11w77YQLhgUt8HUJrMtntGGr97RyXmot1ofs5Ct2ELTmbFoYsQa","/p2p/11afuQSrmk52mgxLu91AdtDXbJ9wmqWBUxC3hvjejoXkxEZfPvY"]},
+   {default_routers, ["/p2p/11w77YQLhgUt8HUJrMtntGGr97RyXmot1ofs5Ct2ELTmbFoYsQa","/p2p/11afuQSrmk52mgxLu91AdtDXbJ9wmqW
    {mark_mods, [miner_hbbft_handler]},
    {stabilization_period, 50000},
    {reg_domains_file, "countries_reg_domains.csv"},
