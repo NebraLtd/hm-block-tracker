@@ -9,6 +9,11 @@
     path: /var/miner_config
     state: directory
 
+- name: Create miner logs directory
+  file:
+    path: /var/log/miner
+    state: directory
+
 - name: Clone hm-blocktracker repository
   git:
     repo: https://github.com/NebraLtd/hm-block-tracker.git
