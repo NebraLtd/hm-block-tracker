@@ -12,6 +12,44 @@ Our miner container (see [hm-miner](https://github.com/NebraLtd/hm-miner)) pulls
 
 In the future we plan to introduce a [watchdog container](https://github.com/NebraLtd/hm-watchdog) to our software which will periodically check the sync status of the miner and automatically pull down the latest config and snapshot if the miner sync gets behind by more than ~240 blocks, without any manual intervention.
 
+## Testing
+
+After making any changes, make sure you run the unit tests:
+```
+$ pytest
+```
+
+With that done, then run the integration test manually (i.e. load the file in Erlang to check syntax).
+
+```
+$ python miner_config/generate_config.py
+$ docker run \
+    --rm -ti \
+    -v $(pwd):/foobar \
+    erlang:24-alpine \
+    erl -config /foobar/docker
+
+```
+
+If the config file is valid, you'll get something like this:
+
+```
+Erlang/OTP 24 [erts-12.2.1] [source] [64-bit] [smp:6:6] [ds:6:6:10] [async-threads:1] [jit:no-native-stack]
+
+Eshell V12.2.1  (abort with ^G)
+1>
+BREAK: (a)bort (A)bort with dump (c)ontinue (p)roc info (i)nfo
+       (l)oaded (v)ersion (k)ill (D)b-tables (d)istribution
+       ^C
+```
+
+But if the config file is broken, you'll instead get something like this:
+
+```
+{"could not start kernel pid",application_controller,"error in config file \"/foobar/test.config\" (52): syntax error before: HERE"}
+could not start kernel pid (application_controller) (error in config file "/foobar/test.config" (52): syntax error before: HERE)
+```
+
 ## Production vs Staging
 
 * The master branch is mapped against the staging environment (helium-snapshots-stage.nebra.com and helium-assets-stage.nebra.com)
