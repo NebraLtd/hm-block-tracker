@@ -4,6 +4,7 @@ Wants=snapshot-stage.timer
 
 [Service]
 Environment="PYTHONPATH=/home/snapshot/hm-block-tracker/snapshotter/"
+Environment="PRODUCTION=0"
 Type=oneshot
 User=snapshot
 Group=snapshot
