@@ -13,7 +13,7 @@ fi
 
 # Let's first start by sanity checking that the miner works as expected
 CURRENT_MINER_HEIGHT=$(docker exec miner miner info height | awk {'print $2'})
-CURRENT_SNAPSHOT_HEIGHT=$(curl -s https://helium-snapshots.nebra.com/latest-snap.json | jq .height)
+CURRENT_SNAPSHOT_HEIGHT=$(curl -s https://$SNAPSHOT_BUCKET/latest-snap.json | jq .height)
 if [[ "failed" == *"$CURRENT_MINER_HEIGHT"* ]]; then
     echo "Got error from miner. Restarting miner and exiting."
     docker restart miner
