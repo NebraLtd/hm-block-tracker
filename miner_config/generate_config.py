@@ -57,9 +57,11 @@ def output_config_file(config, path):
 def main():
     init_sentry()
     if bool(int(os.getenv('PRODUCTION', '0'))):
-        base_url = 'https://helium-snapshots.nebra.com'
+        # base_url = 'https://helium-snapshots.nebra.com'
+        base_url = 'https://snapshots.helium.wtf/mainnet'
     else:
-        base_url = 'https://helium-snapshots-stage.nebra.com'
+        # base_url = 'https://helium-snapshots-stage.nebra.com'
+        base_url = 'https://snapshots.helium.wtf/testnet'
 
     if bool(int(os.getenv('ROCKPI', '0'))):
         i2c_bus = 'i2c-7'
