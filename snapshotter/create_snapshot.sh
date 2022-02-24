@@ -5,9 +5,9 @@ IFS=$'\n\t'
 export PATH=$PATH:/usr/bin:/snap/bin
 
 if [ "$PRODUCTION" == "1" ]; then
-    SNAPSHOT_BUCKET='helium-snapshots.nebra.com'
+    SNAPSHOT_BUCKET='helium-snapshots.nebracdn.com'
 else
-    SNAPSHOT_BUCKET='helium-snapshots-stage.nebra.com'
+    SNAPSHOT_BUCKET='helium-snapshots-stage.nebracdn.com'
 fi
 
 
