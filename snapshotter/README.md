@@ -93,21 +93,3 @@ $ gsutil lifecycle set misc/snapshots_lifecycle.json \
     gs://{helium-snapshots,helium-snapshots-stage}.nebracdn.com
 
 ```
-
-  * Name: helium-snapshots
-  * Location type: Multi-region
-  * Storage Class: Standard
-  * Enforce public access prevention on this bucket: Unchecked
-  * Access control: Uniform
-  * Protection tools: None
-* Switch to the life cycle tab and add a rule.
-  * Action: Delete object
-  * Condition: Age - 1 day
-* Visit the Virtual Machine's page and copy it's service account it should look something like 726878424436-compute@developer.gserviceaccount.com
-* Within the bucket switch to the permissions tab and add a new permission
-  * New principals: Your service account, e.g. 726878424436-compute@developer.gserviceaccount.com
-  * Role: Storage Legacy Object Owner
-* Make objects public, click add a new permission
-  * New principals: allUsers
-  * Role: Storage Legacy Object Reader
-
