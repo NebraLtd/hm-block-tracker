@@ -51,28 +51,6 @@ will use this to provide private snapshots to Nebra customers for faster syncing
 
 
 ### Google Cloud Storage Bucket
-* Create a new GCS bucket to store your snapshots.
-
-#### Set up helium-assets buckets
-```
-$ gsutil mb \
-    -p nebra-production \
-    -c standard \
-    -l us \
-    gs://{helium-assets,helium-assets-stage}.nebracdn.com
-
-$ gsutil iam ch allUsers:objectViewer \
-    gs://{helium-assets,helium-assets-stage}.nebracdn.com
-
-$ gsutil iam ch \
-    serviceAccount:gh-actions-production-images@nebra-production.iam.gserviceaccount.com:objectCreator \
-    gs://{helium-assets,helium-assets-stage}.nebracdn.com
-
-$ gsutil iam ch \
-    serviceAccount:githubactions-copytobucket@nebra-production.iam.gserviceaccount.com:admin \
-    gs://{helium-assets,helium-assets-stage}.nebracdn.com
-```
-
 
 #### Set up helium-snapshots buckets
 
