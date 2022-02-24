@@ -14,7 +14,7 @@ def init_sentry():
 
 def get_latest_snapshot_block(base_url):
     # Fetches latest snapshoted block from Helium API.
-    # resp = requests.get('https://helium-snapshots.nebra.com/latest.json')
+    # resp = requests.get('https://helium-snapshots.nebracdn.com/latest.json')
     cache = {
         "Cache-Control": "no-cache",
         "Pragma": "no-cache"
@@ -57,9 +57,9 @@ def output_config_file(config, path):
 def main():
     init_sentry()
     if bool(int(os.getenv('PRODUCTION', '0'))):
-        base_url = 'https://helium-snapshots.nebra.com'
+        base_url = 'https://helium-snapshots.nebracdn.com'
     else:
-        base_url = 'https://helium-snapshots-stage.nebra.com'
+        base_url = 'https://helium-snapshots-stage.nebracdn.com'
 
     if bool(int(os.getenv('ROCKPI', '0'))):
         i2c_bus = 'i2c-7'

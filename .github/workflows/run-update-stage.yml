@@ -24,8 +24,8 @@ jobs:
           PYTHONPATH=`pwd` python3 miner_config/generate_config.py
           PYTHONPATH=`pwd` ROCKPI=1 python3 miner_config/generate_config.py
           # Output latest version info
-          HEIGHT=$(curl -s -H 'Cache-Control: no-cache' https://storage.googleapis.com/helium-snapshots-stage.nebra.com/latest.json | jq -r '.height')
-          HASH=$(curl -s -H 'Cache-Control: no-cache' https://storage.googleapis.com/helium-snapshots-stage.nebra.com/latest.json | jq -r '.hash')
+          HEIGHT=$(curl -s -H 'Cache-Control: no-cache' https://storage.googleapis.com/helium-snapshots-stage.nebracdn.com/latest.json | jq -r '.height')
+          HASH=$(curl -s -H 'Cache-Control: no-cache' https://storage.googleapis.com/helium-snapshots-stage.nebracdn.com/latest.json | jq -r '.hash')
           echo "Block height: $HEIGHT"
           echo "Block hash: $HASH"
           exit 0
@@ -47,8 +47,8 @@ jobs:
         run: |
           gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-assets-stage.nebra.com/docker.config
           gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-assets-stage.nebra.com/docker.config.rockpi
-          gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-snapshots-stage.nebra.com/latest.json
-          gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-snapshots-stage.nebra.com/latest-snap.json
+          gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-snapshots-stage.nebracdn.com/latest.json
+          gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-snapshots-stage.nebracdn.com/latest-snap.json
       - name: Purge Cloudflare Cache for URL
         run: |
           sleep 2m
@@ -63,8 +63,8 @@ jobs:
           curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
           -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
           -H "Content-Type: application/json" \
-          --data '{"files":["https://helium-snapshots-stage.nebra.com/latest.json",{"url":"https://helium-snapshots-stage.nebra.com/latest.json"}]}'
+          --data '{"files":["https://helium-snapshots-stage.nebracdn.com/latest.json",{"url":"https://helium-snapshots-stage.nebracdn.com/latest.json"}]}'
           curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
           -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
           -H "Content-Type: application/json" \
-          --data '{"files":["https://helium-snapshots-stage.nebra.com/latest-snap.json",{"url":"https://helium-snapshots-stage.nebra.com/latest-snap.json"}]}'
+          --data '{"files":["https://helium-snapshots-stage.nebracdn.com/latest-snap.json",{"url":"https://helium-snapshots-stage.nebracdn.com/latest-snap.json"}]}'
