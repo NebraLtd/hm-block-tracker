@@ -55,11 +55,11 @@ jobs:
           curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
           -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
           -H "Content-Type: application/json" \
-          --data '{"files":["https://helium-assets.nebra-stage.com/docker.config",{"url":"https://helium-assets-stage.nebra.com/docker.config"}]}'
+          --data '{"files":["https://helium-assets-stage.nebra.com/docker.config",{"url":"https://helium-assets-stage.nebra.com/docker.config"}]}'
           curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
           -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
           -H "Content-Type: application/json" \
-          --data '{"files":["https://helium-assets.nebra-stage.com/docker.config.rockpi",{"url":"https://helium-assets-stage.nebra.com/docker.config.rockpi"}]}'
+          --data '{"files":["https://helium-assets-stage.nebra.com/docker.config.rockpi",{"url":"https://helium-assets-stage.nebra.com/docker.config.rockpi"}]}'
           curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
           -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
           -H "Content-Type: application/json" \
