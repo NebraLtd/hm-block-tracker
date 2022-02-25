@@ -1,5 +1,7 @@
-#
+# Miner snapshot generator
+
 #### Set up helium-assets buckets
+
 ```
 $ gsutil mb \
     -p nebra-production \
