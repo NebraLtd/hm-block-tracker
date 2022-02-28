@@ -82,3 +82,64 @@ When updating the config.template and txt files in tests/fixtures make sure to r
 This repository deprecates the following repositories:
 * https://github.com/NebraLtd/snapshot-bumper
 * https://github.com/NebraLtd/vps-scripts
+
+## Debugging
+
+1. After connecting via SSH, you will need to change to change to root for most opertions:
+
+```
+marvin@snapshotter:~$ sudo su
+root@snapshotter:/home/marvin#
+```
+
+2. Check miner container status:
+
+```
+# docker ps
+CONTAINER ID   IMAGE                                                   COMMAND                  CREATED        STAT
+US        PORTS                      NAMES
+469a527e0016   quay.io/team-helium/miner:miner-amd64_2022.01.29.0_GA   "/opt/miner/bin/mine…"   21 hours ago   Up 2
+1 hours   127.0.0.1:4467->4467/tcp   miner
+```
+
+3. Check miner logs: `$ less /var/miner_data/log/console.log`
+4. Check miner configs: `$ less /var/miner_config/sys.config`
+5. Restart/purge miner:
+
+```sh
+# Prepare environment
+MINER_DOCKER_TAG="miner-amd64_YYYY.MM.DD.0_GA"
+MINER_STORAGE="/var/miner_data"
+MINER_LOGS="/var/miner_logs"
+MINER_CONFIG="/var/miner_config"
+
+# Stop miner
+docker kill miner
+docker rm -f miner
+
+# Purge miner data (optional)
+if [ -n "$PURGE" ]; then
+    rm -rf "$MINER_STORAGE"
+    mkdir -p "$MINER_STORAGE"
+    chmod 755 /var/miner_data
+fi
+
+# Start miner
+docker run \
+    --volume "$MINER_STORAGE:/var/data" \
+    --volume "$MINER_LOGS:/var/log/miner" \
+    --volume "$MINER_CONFIG:/opt/miner/config" \
+    -d -p 127.0.0.1:4467:4467 \
+    --restart=always \
+    --name miner \
+    "quay.io/team-helium/miner:$MINER_DOCKER_TAG"
+```
+
+6. Access miner shell: `docker exec -it miner /bin/sh`
+7. Check miner height from host: `docker exec miner miner info height`
+8. Manually create snapshot:
+
+```
+$ systemctl start snapshot.service
+$ systemctl start snapshot-stage.service
+```
