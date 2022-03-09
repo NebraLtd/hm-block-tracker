@@ -25,6 +25,7 @@ jobs:
         run: |
           PYTHONPATH=`pwd` PRODUCTION=1 python3 miner_config/generate_config.py
           PYTHONPATH=`pwd` PRODUCTION=1 ROCKPI=1 python3 miner_config/generate_config.py
+          PYTHONPATH=`pwd` PRODUCTION=1 PISCES=1 python3 miner_config/generate_config.py
           # Output latest version info
           HEIGHT=$(curl -s -H 'Cache-Control: no-cache' https://storage.googleapis.com/helium-snapshots.nebracdn.com/latest.json | jq -r '.height')
           HASH=$(curl -s -H 'Cache-Control: no-cache' https://storage.googleapis.com/helium-snapshots.nebracdn.com/latest.json | jq -r '.hash')
@@ -41,14 +42,17 @@ jobs:
         run: |
           gsutil cp docker.config gs://helium-assets.nebra.com/docker.config
           gsutil cp docker.config.rockpi gs://helium-assets.nebra.com/docker.config.rockpi
+          gsutil cp docker.config.pisces gs://helium-assets.nebra.com/docker.config.pisces
       - name: Set ACL
         run: |
           gsutil acl set acl.txt gs://helium-assets.nebra.com/docker.config
           gsutil acl set acl.txt gs://helium-assets.nebra.com/docker.config.rockpi
+          gsutil acl set acl.txt gs://helium-assets.nebra.com/docker.config.pisces
       - name: Change Cache-Control metadata of assets
         run: |
           gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-assets.nebra.com/docker.config
           gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-assets.nebra.com/docker.config.rockpi
+          gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-assets.nebra.com/docker.config.pisces
           gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-snapshots.nebracdn.com/latest.json
           gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-snapshots.nebracdn.com/latest-snap.json
       - name: Purge Cloudflare Cache for URL
@@ -62,6 +66,10 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
           -H "Content-Type: application/json" \
           --data '{"files":["https://helium-assets.nebra.com/docker.config.rockpi",{"url":"https://helium-assets.nebra.com/docker.config.rockpi"}]}'
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+          -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
+          -H "Content-Type: application/json" \
+          --data '{"files":["https://helium-assets.nebra.com/docker.config.pisces",{"url":"https://helium-assets.nebra.com/docker.config.pisces"}]}'
           curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
           -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
           -H "Content-Type: application/json" \

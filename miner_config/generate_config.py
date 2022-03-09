@@ -64,6 +64,9 @@ def main():
     if bool(int(os.getenv('ROCKPI', '0'))):
         i2c_bus = 'i2c-7'
         path = 'docker.config.rockpi'
+    elif bool(int(os.getenv('PISCES', '0'))):
+        i2c_bus = 'i2c-0'
+        path = 'docker.config.pisces'
     else:
         i2c_bus = 'i2c-1'
         path = 'docker.config'
