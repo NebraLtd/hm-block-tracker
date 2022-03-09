@@ -76,3 +76,29 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
           -H "Content-Type: application/json" \
           --data '{"files":["https://helium-snapshots-stage.nebracdn.com/latest-snap.json",{"url":"https://helium-snapshots-stage.nebracdn.com/latest-snap.json"}]}'
+      - name: Report Status
+        if: always()
+        uses: ravsamhq/notify-slack-action@master
+        with:
+          status: ${{ job.status }}
+          notification_title: 'Staging hm-block-tracker config update has failed - please check urgently!'
+          message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
+          footer: '<{run_url}|View Run> | Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>'
+          mention_groups: 'S02GCFWL27R'
+          notify_when: 'failure'
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.MINER_MONITORING_SLACK }}
+      - name: Report Status Dev Team
+        if: always()
+        uses: ravsamhq/notify-slack-action@master
+        with:
+          status: ${{ job.status }}
+          notification_title: 'Staging hm-block-tracker config update has failed - please check urgently!'
+          message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
+          footer: '<{run_url}|View Run> | Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>'
+          mention_groups: 'S02GCFWL27R'
+          notify_when: 'failure'
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.DEV_TEAM_SLACK }}
