@@ -31,7 +31,7 @@ jobs:
           echo "Block hash: $HASH"
           exit 0
       - name: Setup gsutil.
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           service_account_key: ${{ secrets.GOOGLE_SA }}
           project_id: ${{ secrets.GOOGLE_PROJECT }}
