@@ -54,25 +54,27 @@ def output_config_file(config, path):
     open(path, "w").write(config)
 
 
-def is_testnet_fleet():
-    return bool(int(os.getenv('TESTNET', '0')))
+def is_prodcution_fleet() -> bool:
+    return not bool(int(os.getenv('TESTNET', '0')))
 
-def is_rockpi():
-    return bool(int(os.getenv('ROCKPI', '0')))
+
+def is_device_type(board_name: str) -> bool:
+    return bool(int(os.getenv(board_name, '0')))
+
 
 def main():
     init_sentry()
-    if is_testnet_fleet():
-        base_url = 'https://helium-snapshots-stage.nebracdn.com'
-        template_path = 'config-stage.template'
-    else:
+    if is_prodcution_fleet():
         base_url = 'https://helium-snapshots.nebracdn.com'
         template_path = 'config.template'
+    else:
+        base_url = 'https://helium-snapshots-stage.nebracdn.com'
+        template_path = 'config-stage.template'
 
-    if is_rockpi():
+    if is_device_type('ROCKPI'):
         i2c_bus = 'i2c-7'
         path = 'docker.config.rockpi'
-    elif bool(int(os.getenv('PISCES', '0'))):
+    elif is_device_type('PISCES'):
         i2c_bus = 'i2c-0'
         path = 'docker.config.pisces'
     else:
@@ -80,7 +82,8 @@ def main():
         path = 'docker.config'
 
     latest_snapshot = get_latest_snapshot_block(base_url)
-    config = populate_template(latest_snapshot, base_url, i2c_bus, template_path)
+    config = populate_template(latest_snapshot, base_url,
+                               i2c_bus, template_path)
     output_config_file(config, path)
 
 
