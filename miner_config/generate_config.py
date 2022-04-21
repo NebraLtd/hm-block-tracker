@@ -54,8 +54,8 @@ def output_config_file(config, path):
     open(path, "w").write(config)
 
 
-def is_prodcution_fleet() -> bool:
-    return not bool(int(os.getenv('TESTNET', '0')))
+def is_production_fleet() -> bool:
+    return bool(int(os.getenv('PRODUCTION', '0')))
 
 
 def is_device_type(board_name: str) -> bool:
@@ -64,7 +64,7 @@ def is_device_type(board_name: str) -> bool:
 
 def main():
     init_sentry()
-    if is_prodcution_fleet():
+    if is_production_fleet():
         base_url = 'https://helium-snapshots.nebracdn.com'
         template_path = 'config.template'
     else:
