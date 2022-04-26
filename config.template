@@ -58,15 +58,14 @@
    {seed_nodes, "/ip4/18.217.27.26/tcp/2154,/ip4/35.161.222.43/tcp/443,/ip4/99.80.158.114/tcp/2154,/ip4/3.66.43.167/tcp/443,/ip4/52.220.121.45/tcp/2154,/ip4/54.207.252.240/tcp/443,/ip4/3.34.10.207/tcp/2154,/ip4/13.238.174.45/tcp/443"},
    {peerbook_update_interval, 900000},
    {max_inbound_connections, 6},
-   {outbound_gossip_connections, 2},
+   {outbound_gossip_connections, 6},
    {gossip_version, 2},
    {peerbook_allow_rfc1918, false},
    {metadata_fun, fun miner_util:metadata_fun/0},
    {relay_limit, 50},
    {disable_gateway_cache, true},
    {gw_cache_retention_limit, 0},
-   {gw_context_cache_max_size, 0},
-   {blocks_to_protect_from_gc, 4000}
+   {gw_context_cache_max_size, 0}
   ]},
  {relcast,
   [
@@ -84,7 +83,6 @@
     [
      {max_open_files, 128},
      {compaction_style, universal},
-     {block_based_table_options, [{cache_index_and_filter_blocks, true}]},
      {memtable_memory_budget, 8388608},  % 8MB
      {arena_block_size, 262144}, % 256kB
      {write_buffer_size, 262144}, % 256kB
@@ -95,6 +93,10 @@
      {log_file_time_to_roll, 86400} %% rotate logs once a day
     ]}
   ]},
+ {sibyl,
+     [
+         {validator_ignore_list, []}
+  ]},
  {miner,
   [
    {denylist_keys, ["1SbEYKju337P6aYsRd9DT2k4qgK5ZK62kXbSvnJgqeaxK3hqQrYURZjL"]},
@@ -103,11 +105,13 @@
    {jsonrpc_ip, {0,0,0,0}}, %% bind JSONRPC to localhost only
    {jsonrpc_port, 4467},
    {mode, gateway},
+   {gateway_and_mux_enable, false},
+   {gateways_run_chain, true}, %% if false, gateways will no longer follow the chain
    {use_ebus, true},
    {batch_size, 2500},
    {curve, 'SS512'},
    {block_time, 60000},
-   {late_block_timeout_seconds, 3600},
+   {late_block_timeout_seconds, 1800}, % fire a skip every 30 minutes
    {hotfix_dir, "/opt/miner/hotfix"},
    {update_dir, "/opt/miner/update"},
    {api_base_url, "https://api.helium.io/v1"},
@@ -117,6 +121,13 @@
    {default_routers, ["/p2p/11w77YQLhgUt8HUJrMtntGGr97RyXmot1ofs5Ct2ELTmbFoYsQa","/p2p/11afuQSrmk52mgxLu91AdtDXbJ9wmqWBUxC3hvjejoXkxEZfPvY"]},
    {mark_mods, [miner_hbbft_handler]},
    {stabilization_period, 50000},
+   {seed_validators, [
+       {"11tk4zzbyfMPYYHYda255ACoqfYFVdrUSoCWrCYfn8BoyuYrERK", "52.49.199.40", 8080},     %% ireland
+       {"115PmCR6fpFihdjw626JXYdUEdzwjh66yoWzWkMvB9CRGEx1U6G", "3.132.190.192", 8080},    %% ohio
+       {"11pUovhssQdXzrfcYMTUrNNTQossgny8WqhfdbprrAVFyHcmvAN", "35.84.173.125", 8080},    %% oregon
+       {"11yJXQPG9deHqvw2ac6VWtNP7gZj8X3t3Qb3Gqm9j729p4AsdaA", "3.38.70.101", 8080},      %% seoul
+       {"11Gx2yPEmBGUrbHUiUWQs9vV7JDHQLZSddQs6e3WB2uvqSMUDBW", "54.251.77.229", 8080}     %% singapore
+   ]},
    {reg_domains_file, "countries_reg_domains.csv"},
    {frequency_data, #{'US915' => [903.9, 904.1, 904.3, 904.5, 904.7, 904.9, 905.1, 905.3],
                       'EU868' => [867.1, 867.3, 867.5, 867.7, 867.9, 868.1, 868.3, 868.5],
@@ -132,33 +143,5 @@
                       'IN865' => [865.0625, 865.4025, 865.985],
                       'RU864' => [864.1, 864.3, 864.5, 864.7, 864.9, 868.9, 869.1]}
    }
-  ]},
-    {grpcbox, [
-        {servers, [
-            #{
-                grpc_opts => #{
-                    service_protos => [gateway_pb],
-                    services => #{'helium.gateway' => helium_gateway_service}
-                },
-
-                transport_opts => #{ssl => false},
-
-                listen_opts => #{
-                    port => 8080,
-                    ip => {0, 0, 0, 0}
-                },
-
-                pool_opts => #{size => 100},
-
-                server_opts => #{
-                    header_table_size => 4096,
-                    enable_push => 1,
-                    max_concurrent_streams => unlimited,
-                    initial_window_size => 65535,
-                    max_frame_size => 16384,
-                    max_header_list_size => unlimited
-                }
-            }
-        ]}
-    ]}
+  ]}
 ].

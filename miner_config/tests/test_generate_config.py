@@ -39,3 +39,16 @@ class TestPopulateTemplate(TestCase):
         i2c_bus = 'i2c-1'
         output = populate_template(blessed_block, base_url, i2c_bus)
         self.assertEqual(output, conf_file)
+
+    def test_populate_template_staging(self):
+        path = '%s/sample_output_staging.txt' % FIXTURES_PATH
+        conf_file = open(path).read()
+        blessed_block = {
+            'height': 500,
+            'hash': 'HASH HERE'
+        }
+        base_url = 'https://helium-snapshots-stage.nebracdn.com'
+        i2c_bus = 'i2c-1'
+        output = populate_template(blessed_block, base_url,
+                                   i2c_bus, 'config-stage.template')
+        self.assertEqual(output, conf_file)
