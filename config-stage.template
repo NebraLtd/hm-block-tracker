@@ -65,8 +65,7 @@
    {relay_limit, 50},
    {disable_gateway_cache, true},
    {gw_cache_retention_limit, 0},
-   {gw_context_cache_max_size, 0},
-   {blocks_to_protect_from_gc, 4000}
+   {gw_context_cache_max_size, 0}
   ]},
  {relcast,
   [
@@ -112,7 +111,7 @@
    {batch_size, 2500},
    {curve, 'SS512'},
    {block_time, 60000},
-   {late_block_timeout_seconds, 3600},
+   {late_block_timeout_seconds, 1800}, % fire a skip every 30 minutes
    {hotfix_dir, "/opt/miner/hotfix"},
    {update_dir, "/opt/miner/update"},
    {api_base_url, "https://api.helium.io/v1"},

@@ -43,7 +43,7 @@
   ]},
  {blockchain,
   [
-   {snap_source_base_url, "https://helium-snapshots.nebracdn.com"},
+   {snap_source_base_url, "https://helium-snapshots-stage.nebracdn.com"},
    {fetch_latest_from_snap_source, true},
    {honor_quick_sync, true},
    {quick_sync_mode, blessed_snapshot},
