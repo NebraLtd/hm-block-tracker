@@ -51,7 +51,7 @@ done
 
 # Only upload snapshots if they are all valid.
 if [ "$ARE_SNAPSHOTS_VALID" -eq "1" ]; then
-    gsutil cp "$TMPDIR/snap-$BLOCK_HEIGHT" "gs://$SNAPSHOT_BUCKET/snap-$BLOCK_HEIGHT"
+    gsutil cp "$TMPDIR/snap-$BLOCK_HEIGHT" "gs://$SNAPSHOT_BUCKET/snap-$BLOCK_HEIGHT.gz"
     gsutil cp "$TMPDIR/latest.json" "gs://$SNAPSHOT_BUCKET/latest.json"
     gsutil cp "$TMPDIR/latest-snap.json" "gs://$SNAPSHOT_BUCKET/latest-snap.json"
 fi
