@@ -13,7 +13,8 @@ fi
 
 # Let's first start by sanity checking that the miner works as expected
 CURRENT_MINER_HEIGHT=$(docker exec miner miner info height | awk {'print $2'})
-CURRENT_SNAPSHOT_HEIGHT=$(curl -s https://$SNAPSHOT_BUCKET/latest-snap.json | jq .height)
+# initlize current snapshot height to 0 if there is some problem with last snapshot stored in bucket.
+CURRENT_SNAPSHOT_HEIGHT=$(curl -s https://$SNAPSHOT_BUCKET/latest-snap.json | jq .height) || CURRENT_SNAPSHOT_HEIGHT=0
 if [[ "failed" == *"$CURRENT_MINER_HEIGHT"* ]]; then
     echo "Got error from miner. Restarting miner and exiting."
     docker restart miner
@@ -29,7 +30,7 @@ fi
 # Initial sanity checks passed. Continuing on with a snapshot.
 echo "About to take snapshot"
 # Sometimes the snapshot times out and needs more time to finish
-docker exec miner miner snapshot take /var/data/saved-snaps/latest || (echo "Snapshot still loading, sleeping..." && sleep 60)
+docker exec miner miner snapshot take /var/data/saved-snaps/latest || (echo "Snapshot still loading, sleeping..." && sleep 180)
 
 echo "Parsing snapshot (1/3)"
 BLOCK_HEIGHT=$(docker exec miner miner snapshot info /var/data/saved-snaps/latest.gz | head -1 | awk {'print $2'})
@@ -44,6 +45,7 @@ BASE64URL_FORMAT=$(python3 /home/snapshot/hm-block-tracker/snapshotter/base64url
 TMPDIR=$(mktemp -d)
 
 mv /var/miner_data/saved-snaps/latest.gz "$TMPDIR/snap-$BLOCK_HEIGHT.gz"
+
 echo "{\"height\": $BLOCK_HEIGHT, \"hash\": \"$BYTE_ARRAY\"}" | tee -a "$TMPDIR/latest.json"
 echo "{\"height\": $BLOCK_HEIGHT, \"hash\": \"$BASE64URL_FORMAT\"}" | tee -a "$TMPDIR/latest-snap.json"
 
