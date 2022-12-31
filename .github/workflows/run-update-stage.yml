@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Python & dependencies.
         run: |
           sudo apt-get update
@@ -24,6 +24,7 @@ jobs:
           PYTHONPATH=`pwd` python3 miner_config/generate_config.py
           PYTHONPATH=`pwd` ROCKPI=1 python3 miner_config/generate_config.py
           PYTHONPATH=`pwd` PISCES=1 python3 miner_config/generate_config.py
+          PYTHONPATH=`pwd` PYCOM=1 python3 miner_config/generate_config.py
           # Output latest version info
           HEIGHT=$(curl -s -H 'Cache-Control: no-cache' https://storage.googleapis.com/helium-snapshots-stage.nebracdn.com/latest.json | jq -r '.height')
           HASH=$(curl -s -H 'Cache-Control: no-cache' https://storage.googleapis.com/helium-snapshots-stage.nebracdn.com/latest.json | jq -r '.hash')
@@ -31,7 +32,7 @@ jobs:
           echo "Block hash: $HASH"
           exit 0
       - name: Setup gsutil.
-        uses: google-github-actions/setup-gcloud@v0
+        uses: google-github-actions/setup-gcloud@v1
         with:
           service_account_key: ${{ secrets.GOOGLE_SA }}
           project_id: ${{ secrets.GOOGLE_PROJECT }}
@@ -41,16 +42,19 @@ jobs:
           gsutil cp docker.config gs://helium-assets-stage.nebra.com/docker.config
           gsutil cp docker.config.rockpi gs://helium-assets-stage.nebra.com/docker.config.rockpi
           gsutil cp docker.config.pisces gs://helium-assets-stage.nebra.com/docker.config.pisces
+          gsutil cp docker.config.pisces gs://helium-assets-stage.nebra.com/docker.config.pycom
       - name: Set ACL
         run: |
           gsutil acl set acl.txt gs://helium-assets-stage.nebra.com/docker.config
           gsutil acl set acl.txt gs://helium-assets-stage.nebra.com/docker.config.rockpi
           gsutil acl set acl.txt gs://helium-assets-stage.nebra.com/docker.config.pisces
+          gsutil acl set acl.txt gs://helium-assets-stage.nebra.com/docker.config.pycom
       - name: Change Cache-Control metadata of assets
         run: |
           gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-assets-stage.nebra.com/docker.config
           gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-assets-stage.nebra.com/docker.config.rockpi
           gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-assets-stage.nebra.com/docker.config.pisces
+          gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-assets-stage.nebra.com/docker.config.pycom
           gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-snapshots-stage.nebracdn.com/latest.json
           gsutil setmeta -h "Cache-Control:max-age=60" gs://helium-snapshots-stage.nebracdn.com/latest-snap.json
       - name: Purge Cloudflare Cache for URL
@@ -68,6 +72,10 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
           -H "Content-Type: application/json" \
           --data '{"files":["https://helium-assets-stage.nebra.com/docker.config.pisces",{"url":"https://helium-assets-stage.nebra.com/docker.config.pisces"}]}'
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+          -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
+          -H "Content-Type: application/json" \
+          --data '{"files":["https://helium-assets-stage.nebra.com/docker.config.pycom",{"url":"https://helium-assets-stage.nebra.com/docker.config.pycom"}]}'
           curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
           -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_CACHE_PURGE_KEY }}" \
           -H "Content-Type: application/json" \
