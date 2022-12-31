@@ -42,7 +42,7 @@ jobs:
           gsutil cp docker.config gs://helium-assets-stage.nebra.com/docker.config
           gsutil cp docker.config.rockpi gs://helium-assets-stage.nebra.com/docker.config.rockpi
           gsutil cp docker.config.pisces gs://helium-assets-stage.nebra.com/docker.config.pisces
-          gsutil cp docker.config.pisces gs://helium-assets-stage.nebra.com/docker.config.pycom
+          gsutil cp docker.config.pycom gs://helium-assets-stage.nebra.com/docker.config.pycom
       - name: Set ACL
         run: |
           gsutil acl set acl.txt gs://helium-assets-stage.nebra.com/docker.config
