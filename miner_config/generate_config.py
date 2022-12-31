@@ -77,6 +77,9 @@ def main():
     elif is_device_type('PISCES'):
         i2c_bus = 'i2c-0'
         path = 'docker.config.pisces'
+    elif is_device_type('PYCOM'):
+        i2c_bus = 'i2c-10'
+        path = 'docker.config.pycom'
     else:
         i2c_bus = 'i2c-1'
         path = 'docker.config'
