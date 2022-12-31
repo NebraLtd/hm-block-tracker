@@ -33,7 +33,11 @@ jobs:
           echo "Block height: $HEIGHT"
           echo "Block hash: $HASH"
           exit 0
-      - name: Setup gsutil.
+      - name: Google cloud login
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GOOGLE_SA }}
+      - name: Setup gsutil
         uses: google-github-actions/setup-gcloud@v1
         with:
           service_account_key: ${{ secrets.GOOGLE_SA }}
