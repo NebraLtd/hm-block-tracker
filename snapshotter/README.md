@@ -48,24 +48,26 @@ will use this to provide private snapshots to Nebra customers for faster syncing
   * Should complete cleanly synchronously in the user's shell
 * Once happy enable the timer
   * `systemctl enable snapshot.timer`
-  
+
 
 ### Google Cloud Storage Bucket
-* Create a new GCS bucket to store your snapshots.
-  * Name: helium-snapshots
-  * Location type: Multi-region
-  * Storage Class: Standard
-  * Enforce public access prevention on this bucket: Unchecked
-  * Access control: Uniform
-  * Protection tools: None
-* Switch to the lifecycle tab and add a rule.
-  * Action: Delete object
-  * Condition: Age - 1 day
-* Visit the Virtual Machine's page and copy it's service account it should look something like 726878424436-compute@developer.gserviceaccount.com
-* Within the bucket switch to the permissions tab and add a new permission
-  * New principals: Your service account, e.g. 726878424436-compute@developer.gserviceaccount.com
-  * Role: Storage Legacy Object Owner
-* Make objects public, click add a new permission
-  * New principals: allUsers
-  * Role: Storage Legacy Object Reader
 
+#### Set up helium-snapshots buckets
+
+```
+$ gsutil mb \
+    -p nebra-production \
+    -c standard \
+    -l us \
+    gs://{helium-snapshots,helium-snapshots-stage}.nebracdn.com
+
+$ gsutil iam ch allUsers:objectViewer \
+    gs://{helium-snapshots,helium-snapshots-stage}.nebracdn.com
+
+$ gsutil ubla set on \
+    gs://{helium-snapshots,helium-snapshots-stage}.nebracdn.com
+
+$ gsutil lifecycle set misc/snapshots_lifecycle.json \
+    gs://{helium-snapshots,helium-snapshots-stage}.nebracdn.com
+
+```
