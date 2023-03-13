@@ -87,7 +87,7 @@ def main():
         base_url = 'https://helium-snapshots-stage.nebracdn.com'
         template_path = 'config-stage.template'
 
-    onboarding_key_slot = 0
+    onboarding_key_uri = False
 
     if is_device_type('ROCKPI'):
         swarm_key_uri = get_variant_attribute('nebra-indoor2', 'SWARM_KEY_URI')
