@@ -51,7 +51,7 @@
    {blessed_snapshot_block_hash,
      {{blessed_block_hash}}},
    {listen_addresses, ["/ip4/0.0.0.0/tcp/44158"]},
-   {key, {ecc, [{key_slot, 0}, {onboarding_key_slot, 0}, {bus, "{{i2c_bus}}"}]}}, %% don't make this the last line in the stanza because sed and keep it on one line
+   {key, {ecc, [{key_slot, {{key_slot}}}, {onboarding_key_slot, {{onboarding_key_slot}}}, {bus, "{{i2c_bus}}"}, {address, 16#{{i2c_address}}}]}}, %% don't make this the last line in the stanza because sed and keep it on one line
    {base_dir, "/var/data"},
    {onboarding_dir, "/mnt/uboot"},
    {num_consensus_members, 16},
