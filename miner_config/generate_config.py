@@ -110,7 +110,7 @@ def main():
     i2c_bus = parse_result.hostname
     i2c_address = parse_i2c_address(parse_result.port)
     query_string = parse_qs(parse_result.query)
-    key_slot = query_string["slot"]
+    key_slot = query_string["slot"][0]
 
     latest_snapshot = get_latest_snapshot_block(base_url)
     config = populate_template(latest_snapshot, base_url, i2c_bus, key_slot,
