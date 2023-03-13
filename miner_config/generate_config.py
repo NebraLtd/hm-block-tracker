@@ -87,7 +87,7 @@ def main():
         base_url = 'https://helium-snapshots-stage.nebracdn.com'
         template_path = 'config-stage.template'
 
-    onboarding_key_slot = 0
+    onboarding_key_uri = False
 
     if is_device_type('ROCKPI'):
         swarm_key_uri = get_variant_attribute('nebra-indoor2', 'SWARM_KEY_URI')
@@ -100,11 +100,18 @@ def main():
         path = 'docker.config.pycom'
     elif is_device_type('HELIUMOG'):
         swarm_key_uri = get_variant_attribute('helium-fl1', 'SWARM_KEY_URI')
+        onboarding_key_uri = get_variant_attribute('helium-fl1', 'ONBOARDING_KEY_URI')
         path = 'docker.config.og'
-        onboarding_key_slot = 15
     else:
         swarm_key_uri = get_variant_attribute('nebra-indoor1', 'SWARM_KEY_URI')
         path = 'docker.config'
+
+    if onboarding_key_uri:
+        parse_onboarding_key = urlparse(onboarding_key_uri)
+        query_string = parse_qs(parse_onboarding_key.query)
+        onboarding_key_slot = query_string["slot"][0]
+    else:
+        onboarding_key_slot = 0
 
     parse_result = urlparse(swarm_key_uri)
     i2c_bus = parse_result.hostname
