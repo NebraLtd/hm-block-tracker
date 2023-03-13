@@ -1,3 +1,4 @@
-Jinja2==3.0.1
-requests==2.26.0
-sentry-sdk==1.5.1
+Jinja2==3.1.2
+requests>=2.28.1
+sentry-sdk==1.16.0
+hm-pyhelper==0.13.54
