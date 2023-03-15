@@ -4,6 +4,7 @@ import sentry_sdk
 from jinja2 import Template
 from urllib.parse import urlparse, parse_qs
 from hm_pyhelper.hardware_definitions import get_variant_attribute
+from hm_pyhelper.miner_param import parse_i2c_address
 
 
 def init_sentry():
@@ -71,13 +72,6 @@ def is_device_type(board_name: str) -> bool:
     return bool(int(os.getenv(board_name, '0')))
 
 
-def parse_i2c_address(port):
-    """
-    Takes i2c address in decimal as input parameter, extracts the hex version and returns it.
-    """
-    return f'{port:x}'
-
-
 def main():
     init_sentry()
     if is_production_fleet():
@@ -106,18 +100,18 @@ def main():
         swarm_key_uri = get_variant_attribute('nebra-indoor1', 'SWARM_KEY_URI')
         path = 'docker.config'
 
-    if onboarding_key_uri:
-        parse_onboarding_key = urlparse(onboarding_key_uri)
-        query_string = parse_qs(parse_onboarding_key.query)
-        onboarding_key_slot = query_string["slot"][0]
-    else:
-        onboarding_key_slot = 0
-
-    parse_result = urlparse(swarm_key_uri)
+    parse_result = urlparse(swarm_key_uri[0])
     i2c_bus = parse_result.hostname
     i2c_address = parse_i2c_address(parse_result.port)
     query_string = parse_qs(parse_result.query)
     key_slot = query_string["slot"][0]
+
+    if onboarding_key_uri:
+        parse_onboarding_key = urlparse(onboarding_key_uri[0])
+        query_string = parse_qs(parse_onboarding_key.query)
+        onboarding_key_slot = query_string["slot"][0]
+    else:
+        onboarding_key_slot = key_slot
 
     latest_snapshot = get_latest_snapshot_block(base_url)
     config = populate_template(latest_snapshot, base_url, i2c_bus, key_slot,
